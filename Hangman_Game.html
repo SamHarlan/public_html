@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="Sam Harlan" content="CSC3221 Hangman game">
+
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<style media="screen">
+		.warning {
+			color: red;
+		}
+	</style>
+	<title>Hangman Game</title>
+</head>
+<body>
+	<div class="container">
+		<button type="button" class="btn btn-link" id="pageBack"> <a href="main_page.html">Back</a></button>
+	</div>
+
+<div class="container">
+  <h1>Welcome to a game of Hangman</h1>
+	<figure>
+		 <img src="images/Hangman.gif"
+		 alt = "Hangman Figure"
+		 width = 40%;
+		 height = "280"
+		 title = "Guess all the letters or the stick figure gets it!">
+	 </figure>
+	<p> Please enter the number of guesses you need to guess all the letters in a 5 letter word. </p>
+  <input type="letter" class="form-control" id="txtGuessCount" placeholder="Guess Count">
+	<br>
+	<button type="button" class="btn btn-primary" id="startGame">Start</button>
+</div>
+
+<hr>
+
+<div class="container">
+  <p>You have <span id="guessesLeft">_</span> guesses left</p>
+  <div class="form-group col-md6">
+    <input type="letter" class="form-control" id="txtGuess" placeholder="Guess">
+  </div>
+  <button type="button" class="btn btn-primary" name="guess" id="guess">Guess</button>
+  <br>
+  <br>
+  <hr>
+  <p>Tried: <span id="guessesTried"></span></p>
+</div>
+
+<div class="container jumbotron" id="display">
+
+</div>
+
+<script type="text/javascript">
+  var currGuess = "";
+  var previousGuesses = "";
+  var displayWord = ["_","_","_","_","_"];
+  var words = ["hello", "today", "array", "cheap", "drama", "earth", "fluid", "horse", "image", "quiet"];
+  var secretWord = "";
+  var successCount = 0;
+  var attemptsLeft = 0;
+  document.getElementById("startGame").addEventListener("click", startGame);
+  document.getElementById("guess").addEventListener("click", makeAGuess);
+
+  function startGame() {
+    attemptsLeft = (parseInt(document.getElementById("txtGuessCount").value))-1;
+    if (attemptsLeft > 0) {
+      currGuess = "";
+      previousGuesses = "";
+			successCount = 0;
+      secretWord = words[Math.floor(Math.random() * (10))];
+      for (var i = 0; i < 5; i++) {
+        displayWord[i] = "_";
+      }
+      document.getElementById("display").innerHTML = displayWord;
+      document.getElementById("guessesLeft").innerHTML = attemptsLeft+1;
+      document.getElementById("guessesTried").innerHTML = previousGuesses;
+      document.getElementById("display").innerHTML = displayWord;
+      document.getElementById("txtGuess").innerHTML = "";
+    }
+    else {
+      document.getElementById("display").innerHTML = "You need to ender a positive guess count";
+    }
+  }
+
+  function makeAGuess() {
+
+    if(attemptsLeft > 0 && successCount < 5) {
+      attemptsLeft--;
+      document.getElementById("guessesLeft").innerHTML = attemptsLeft+1;
+      currGuess = document.getElementById("txtGuess").value;
+      document.getElementById("txtGuess").placeholder = "Guess";
+      previousGuesses+= (currGuess + ",");
+      document.getElementById("guessesTried").innerHTML = previousGuesses;
+      document.getElementById("display").innerHTML = currGuess;
+      for (var i = 0; i < 5; i++) {
+        if(secretWord[i] == currGuess && displayWord[i] == "_") {
+          displayWord[i] = currGuess;
+          successCount++;
+					if (successCount >= 5) {
+							document.getElementById("guessesTried").innerHTML = "YOU WIN";
+					}
+        }
+      }
+      document.getElementById("display").innerHTML = displayWord;
+    }
+    else if (successCount < 5 && attemptsLeft < 1) {
+			if(attemptsLeft == 0) {
+      	attemptsLeft--;
+			}
+      document.getElementById("guessesLeft").innerHTML = attemptsLeft+1;
+      document.getElementById("display").innerHTML = "YOU LOSE!";
+  }
+}
+</script>
+	<!-- Optional JavaScript -->
+	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</body>
+</html>
